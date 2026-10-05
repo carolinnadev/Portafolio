@@ -1,0 +1,1874 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
+
+/*
+  Hoja principal del portafolio.
+  Orden general: ajustes globales, navegación, portada y componentes flotantes;
+  después se documentan las secciones de contenido y, al final, las media queries.
+*/
+
+/* Normaliza el modelo de caja para que anchos y paddings sean previsibles. */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #030812;
+}
+
+/* Capa visual del tema oscuro; no bloquea clics ni cambia el contenido semántico. */
+body.theme-dim::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+/* Barra fija superior: concentra navegación principal y selector de tema. */
+.navbar {
+  width: 100%;
+  background-color: rgba(13, 3, 18, 0.95); /* Fondo oscuro #0d0312 con ligera transparencia */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(232, 34, 254, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 12px 24px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Identidad breve de la marca en la parte izquierda de la barra. */
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+
+.role-subtitle {
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Enlaces que saltan a las secciones con el mismo id. */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  padding: 6px 0;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #e822fe;
+}
+
+/* El enlace actual se distingue por color y una línea inferior. */
+.nav-item.active {
+  color: #e822fe;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e822fe;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #e822fe;
+}
+
+/* Selector día/noche; JavaScript alterna theme-dim y conserva la preferencia. */
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-btn {
+  background: rgba(232, 34, 254, 0.1);
+  border: 1px solid rgba(232, 34, 254, 0.4);
+  border-radius: 30px;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: #e822fe;
+  box-shadow: 0 0 10px rgba(232, 34, 254, 0.3);
+}
+
+.sun-icon {
+  width: 16px;
+  height: 16px;
+  color: #e822fe;
+  margin-left: 4px;
+}
+
+.toggle-circle {
+  width: 22px;
+  height: 22px;
+  background-color: #e822fe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 6px #e822fe;
+  transition: transform 0.3s ease;
+}
+
+.moon-icon {
+  width: 13px;
+  height: 13px;
+  color: #0d0312;
+}
+
+body.theme-dim .toggle-circle {
+  transform: translateX(-30px);
+}
+
+/* En tablet se reduce el espacio del menú y se oculta el subtítulo de marca. */
+@media (max-width: 768px) {
+  .nav-container {
+    gap: 12px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+  
+  .nav-item {
+    font-size: 12px;
+  }
+
+  .role-subtitle {
+    display: none;
+  }
+}
+
+
+/* Portada: caro.jpg ocupa el fondo; el degradado oscuro protege la lectura a la izquierda. */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #030812;
+  background-image: linear-gradient(90deg, rgba(3, 8, 18, 0.94) 0%, rgba(3, 8, 18, 0.88) 38%, rgba(3, 8, 18, 0.22) 60%, rgba(3, 8, 18, 0.18) 100%), url('img/caro.jpg');
+  background-position: 62% center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 24px 72px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.hero-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2;
+}
+
+/* Columna de Texto */
+.hero-text {
+  width: 100%;
+  max-width: 550px;
+  text-align: left;
+}
+
+.hero-handwritten {
+  position: absolute;
+  top: 22%;
+  right: 32px;
+  z-index: 2;
+  color: #e822fe;
+  font-family: 'Caveat', cursive;
+  font-size: 24px;
+  line-height: 1.05;
+  text-align: right;
+  transform: rotate(3deg);
+  pointer-events: none;
+}
+
+.hero-handwritten p {
+  margin: 0;
+}
+
+.hero-handwritten span {
+  display: block;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Navegación flotante sincronizada con el scroll por script.js. */
+.hero-section-nav {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  transform: translateY(-50%);
+}
+
+.hero-section-nav a {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+}
+
+.hero-section-nav a.current {
+  background: #e822fe;
+  border-color: #e822fe;
+}
+
+.hero-section-nav a span {
+  display: none;
+  position: absolute;
+  top: -4px;
+  right: 18px;
+  color: #e822fe;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.hero-section-nav a.current span {
+  display: block;
+}
+
+/* El botón de chat queda bajo los puntos; el panel se abre hacia arriba desde el avatar. */
+.caro-chat-widget {
+  position: fixed;
+  top: calc(50% + 72px);
+  right: 12px;
+  z-index: 1002;
+}
+
+.caro-chat-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: auto;
+  min-height: 54px;
+  height: 54px;
+  padding: 5px 12px 5px 5px;
+  background: #0d0312;
+  border: 2px solid #e822fe;
+  border-radius: 28px;
+  box-shadow: 0 0 14px rgba(232, 34, 254, 0.45);
+  cursor: pointer;
+}
+
+.caro-chat-trigger img {
+  display: block;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.caro-chat-trigger-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: #ffffff;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.caro-chat-trigger-copy strong {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.caro-chat-trigger-copy small {
+  color: #d7b7dc;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.caro-chat-header img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.caro-chat-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  display: flex;
+  flex-direction: column;
+  width: min(320px, calc(100vw - 24px));
+  height: min(390px, calc(100dvh - 32px));
+  overflow: hidden;
+  color: #ffffff;
+  background: #100b16;
+  border: 1px solid rgba(232, 34, 254, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* El atributo hidden controla el estado cerrado sin retirar el panel del HTML. */
+.caro-chat-panel[hidden] {
+  display: none;
+}
+
+.caro-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #1a1020;
+  border-bottom: 1px solid rgba(232, 34, 254, 0.25);
+}
+
+.caro-chat-header img {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+.caro-chat-header div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.caro-chat-header strong {
+  font-size: 14px;
+}
+
+.caro-chat-header span {
+  color: #b8aebd;
+  font-size: 12px;
+}
+
+.caro-chat-close,
+.caro-chat-form button {
+  display: grid;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  place-items: center;
+  color: #ffffff;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.caro-chat-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.caro-chat-close svg,
+.caro-chat-form svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.caro-chat-messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+/* Mensajes del bot y del visitante comparten tamaño y espaciado, pero se alinean distinto. */
+.caro-chat-message {
+  max-width: 88%;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  border-radius: 12px;
+}
+
+.caro-chat-message-bot {
+  color: #ffffff;
+  background: #28212d;
+  border-bottom-left-radius: 4px;
+}
+
+.caro-chat-message-user {
+  align-self: flex-end;
+  color: #ffffff;
+  background: #8f16a0;
+  border-bottom-right-radius: 4px;
+}
+
+.caro-chat-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid rgba(232, 34, 254, 0.25);
+}
+
+/* El campo se contrae antes que el botón para evitar overflow en pantallas estrechas. */
+.caro-chat-form input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  color: #ffffff;
+  background: #211a26;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  outline: none;
+}
+
+.caro-chat-form input:focus {
+  border-color: #e822fe;
+}
+
+.caro-chat-form button {
+  color: #ffffff;
+  background: #8f16a0;
+}
+
+.caro-chat-form button:hover {
+  background: #a820ba;
+}
+
+/* Jerarquía del contenido principal de la portada. */
+.greeting {
+  display: block;
+  font-size: 1.15rem;
+  color: #a0aec0;
+  margin-bottom: 8px;
+}
+
+.author-name {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.cyan-highlight {
+  color: #e822fe;
+}
+
+.author-role {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #f7fafc;
+  margin: 0 0 20px 0;
+}
+
+.author-bio {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin-bottom: 36px;
+}
+
+/* Acciones principales de la portada: proyecto y descarga local del CV. */
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background-color: #e822fe;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #f052ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(232, 34, 254, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1.5px solid #ffffff;
+}
+
+.btn-secondary:hover {
+  border-color: #e822fe;
+  color: #e822fe;
+  transform: translateY(-2px);
+  background-color: rgba(232, 34, 254, 0.05);
+}
+
+/* Icono compartido por elementos manuscritos de la portada y otras secciones. */
+.heart-icon {
+  font-size: 1.4rem;
+  margin-top: 4px;
+}
+
+/* El indicador permanece en el flujo del texto, debajo de los botones de portada. */
+.scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 36px;
+  color: #e822fe;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.mouse-icon {
+  width: 16px;
+  height: 26px;
+  border: 2px solid #e822fe;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.wheel {
+  width: 3px;
+  height: 6px;
+  background-color: #e822fe;
+  border-radius: 2px;
+  animation: scroll-anim 1.8s infinite;
+}
+
+@keyframes scroll-anim {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(8px); opacity: 0; }
+}
+
+/* En tablet se conserva una columna legible y el fondo encuadra la imagen a la derecha. */
+@media (max-width: 900px) {
+  .hero-section {
+    background-position: 67% center;
+  }
+
+  .hero-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-text {
+    width: min(60vw, 480px);
+    max-width: 480px;
+  }
+  .hero-cta-group {
+    justify-content: flex-start;
+  }
+}
+
+
+/* Sobre mí vuelve a tres columnas en escritorio y se apila en tablet/móvil. */
+.about-section {
+  background-color: #030a12;
+  color: #ffffff;
+  padding: 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.about-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Columna Izquierda */
+.about-content {
+  flex: 1;
+  max-width: 480px;
+}
+
+.about-content .subtitle {
+  color: #e822fe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.about-content .title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.about-content .description {
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.about-content .description strong {
+  color: #ffffff;
+}
+
+/* Detalles (Ubicación / Formación) */
+.about-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 28px;
+  color: #d1d5db;
+  font-size: 14px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #e822fe;
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Botón "Más sobre mí" */
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border: 1px solid #e822fe;
+  border-radius: 50px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.about-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #e822fe;
+  transition: transform 0.3s ease, stroke 0.3s ease;
+}
+
+.about-btn:hover {
+  background-color: #e822fe;
+  color: #030a12;
+  box-shadow: 0 0 15px rgba(232, 34, 254, 0.5);
+}
+
+.about-btn:hover svg {
+  stroke: #030a12;
+  transform: translateX(4px);
+}
+
+/* Imagen central de la sección Sobre mí */
+.hex-border {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 280px;
+  padding: 3px;
+  background: #e822fe;
+  clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
+  filter: drop-shadow(0 0 12px rgba(232, 34, 254, 0.45));
+}
+
+.hex-image-container {
+  width: 100%;
+  height: 100%;
+  background: #030a12;
+  clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
+  overflow: hidden;
+}
+
+.hex-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Columna Derecha: Texto Manuscrito */
+.about-handwritten {
+  flex: 0.5;
+  font-family: 'Caveat', cursive;
+  color: #e822fe;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.about-handwritten p {
+  margin: 6px 0;
+}
+
+.about-handwritten .heart-icon {
+  font-size: 22px;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Habilidades: ancho de contenido limitado y carrusel horizontal dentro de una banda oscura. */
+.skills-section {
+  background-color: #0d0312;
+  color: #ffffff;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-top: 1px solid rgba(232, 34, 254, 0.2);
+  border-bottom: 1px solid rgba(232, 34, 254, 0.2);
+}
+
+.skills-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Título y subrayado que identifican el contenido del carrusel. */
+.skills-header {
+  margin-bottom: 30px;
+}
+
+.skills-header .subtitle {
+  color: #e822fe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: block;
+}
+
+.skills-header .title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 5px 0;
+  color: #ffffff;
+}
+
+.skills-header .underline {
+  width: 40px;
+  height: 3px;
+  background-color: #e822fe;
+  border-radius: 2px;
+  margin-top: 5px;
+  box-shadow: 0 0 10px rgba(232, 34, 254, 0.5);
+}
+
+/* El contenedor recorta la pista; JavaScript la traslada sin mover los botones externos. */
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-track-container {
+  overflow: hidden;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.carousel-track {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.4s ease-in-out;
+  gap: 15px;
+}
+
+/* Cada tarjeta ocupa una fracción calculada para mostrar nueve elementos en escritorio. */
+.skill-card {
+  flex: 0 0 calc(11.11% - 13.33px); /* 9 visibles en pantalla grande */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 5px;
+  border-right: none; /* Se eliminaron las barras divisorias */
+  box-sizing: border-box;
+}
+
+.icon-wrapper {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.white-icon {
+  filter: brightness(0) invert(1);
+}
+
+.skill-card span {
+  font-size: 13px;
+  color: #d1d5db;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Controles superpuestos a los extremos del carrusel. */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(232, 34, 254, 0.1);
+  border: 1px solid #e822fe;
+  color: #e822fe;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.carousel-btn:hover {
+  background: #e822fe;
+  color: #0d0312;
+  box-shadow: 0 0 12px rgba(232, 34, 254, 0.6);
+}
+
+.prev-btn {
+  left: -18px;
+}
+
+.next-btn {
+  right: -18px;
+}
+
+
+/* La sección Sobre mí pasa de columnas a pila para conservar legibilidad en tablet. */
+@media (max-width: 992px) {
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-content {
+    max-width: 100%;
+  }
+
+  .about-details {
+    justify-content: center;
+  }
+
+  .hex-border {
+    height: 240px;
+  }
+
+  .about-handwritten {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+}
+
+/* Serpiente automática: la cuadrícula se inspira en píxeles y usa el morado de la marca. */
+.snake-section {
+  padding: 56px 24px 64px;
+  color: #ffffff;
+  background: #08070d;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-top: 1px solid rgba(232, 34, 254, 0.18);
+  border-bottom: 1px solid rgba(232, 34, 254, 0.18);
+}
+
+.snake-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* El contador acompaña al título sin alterar el tamaño de la cuadrícula. */
+.snake-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.snake-header .subtitle {
+  display: block;
+  margin-bottom: 6px;
+  color: #e822fe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.snake-header .title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.snake-score {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 2px;
+  color: #b7aebb;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.snake-score span:first-child {
+  color: #e822fe;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 40 columnas de escritorio; el breakpoint móvil cambia el tablero a 20 columnas. */
+.snake-board {
+  display: grid;
+  grid-template-columns: repeat(40, minmax(0, 1fr));
+  gap: 5px;
+  width: 100%;
+  padding: 12px;
+  overflow: hidden;
+  background: #0c0b11;
+  border: 1px solid rgba(232, 34, 254, 0.22);
+  border-radius: 8px;
+}
+
+.snake-cell {
+  display: grid;
+  min-width: 0;
+  aspect-ratio: 1;
+  place-items: center;
+  overflow: hidden;
+  color: #ffffff;
+  background: #1b1b22;
+  border-radius: 2px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Tonos de fondo aleatorios que aportan textura sin representar partes del juego. */
+.snake-cell.is-marked-low {
+  background: #32183b;
+}
+
+.snake-cell.is-marked-mid {
+  background: #6b1978;
+}
+
+.snake-cell.is-marked-high {
+  background: #a91fc0;
+}
+
+/* Estados que script.js asigna a cabeza, cuerpo y comida en cada movimiento. */
+.snake-cell.is-snake {
+  background: #76158a;
+  box-shadow: 0 0 8px rgba(232, 34, 254, 0.35);
+}
+
+.snake-cell.is-head {
+  z-index: 1;
+  background: #e822fe;
+  box-shadow: 0 0 12px rgba(232, 34, 254, 0.75);
+  font-size: 16px;
+}
+
+.snake-cell.is-food {
+  background: #221327;
+  font-size: 17px;
+  animation: food-pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes food-pulse {
+  from { transform: scale(0.92); }
+  to { transform: scale(1.08); }
+}
+
+/* Proyectos: tarjetas en grilla; las adicionales comienzan ocultas y se revelan con el botón. */
+.projects-section {
+  background-color: #0d0312; /* Fondo oscuro #0d0312 */
+  color: #ffffff;
+  padding: 80px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.projects-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Encabezado */
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.projects-subtitle {
+  color: #e822fe;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.projects-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+/* Botón "Ver todos los proyectos" */
+.see-all-btn {
+  background: transparent;
+  border: none;
+  color: #e822fe;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.see-all-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #e822fe;
+  transition: transform 0.3s ease;
+}
+
+.see-all-btn:hover {
+  text-shadow: 0 0 10px rgba(232, 34, 254, 0.6);
+}
+
+.see-all-btn:hover svg {
+  transform: translateX(5px);
+}
+
+/* Cuatro columnas en escritorio; las media queries siguientes reducen la grilla. */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* Tarjeta repetible: imagen superior y cuerpo flex para alinear los enlaces inferiores. */
+.project-card {
+  background: rgba(20, 6, 28, 0.7);
+  border: 1px solid rgba(232, 34, 254, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Efecto de Resaltado al pasar el cursor (Hover) */
+.project-card:hover {
+  transform: translateY(-8px);
+  border-color: #e822fe;
+  box-shadow: 0 10px 25px rgba(232, 34, 254, 0.35);
+  background: rgba(28, 8, 40, 0.9);
+}
+
+.card-image-wrapper {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background-color: #030a12;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover .card-image {
+  transform: scale(1.06);
+}
+
+.card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 34, 254, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon svg {
+  width: 15px;
+  height: 15px;
+  stroke: #e822fe;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(232, 34, 254, 0.4);
+  color: #e822fe;
+  background: rgba(232, 34, 254, 0.1);
+  font-weight: 600;
+}
+
+.card-desc {
+  color: #9ca3af;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+/* Tags de tecnologías */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover .tag {
+  border-color: rgba(232, 34, 254, 0.3);
+  color: #ffffff;
+}
+
+/* Botón inferior "Ver proyecto" */
+.card-btn {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid rgba(232, 34, 254, 0.5);
+  border-radius: 25px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.card-btn:hover {
+  background-color: #e822fe;
+  color: #0d0312;
+  box-shadow: 0 0 15px rgba(232, 34, 254, 0.6);
+  border-color: #e822fe;
+}
+
+/* script.js alterna esta clase al desplegar u ocultar proyectos adicionales. */
+.hidden {
+  display: none !important;
+}
+
+/* Animación de entrada al mostrar más */
+.extra-project {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Contenedor principal de Contacto */
+.contact-section {
+  background-color: #0d0312; /* Fondo principal oscuro */
+  color: #ffffff;
+  padding-top: 80px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 0.7fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Columna Izquierda: Información */
+.section-subtitle {
+  color: #e822fe;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.contact-description {
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 320px;
+}
+
+.contact-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+.contact-item a {
+  color: #d1d5db;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+  color: #e822fe;
+}
+
+.contact-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #e822fe;
+  flex-shrink: 0;
+}
+
+/* Formulario central: inputs comparten contraste, borde de foco y estados de interacción. */
+.contact-form-card {
+  background: rgba(20, 6, 28, 0.6);
+  border: 1px solid rgba(232, 34, 254, 0.4);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 0 25px rgba(232, 34, 254, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Campos de formulario: el breakpoint móvil apila la fila de nombre y correo. */
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: rgba(13, 3, 18, 0.7);
+  border: 1px solid rgba(232, 34, 254, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #6b7280;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e822fe;
+  box-shadow: 0 0 10px rgba(232, 34, 254, 0.3);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Respuesta del backend: el texto permanece visible y se anuncia mediante aria-live en HTML. */
+.contact-form-status {
+  min-height: 18px;
+  margin: 0;
+  color: #d1d5db;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.contact-form-status.is-success {
+  color: #d9a4e8;
+}
+
+.contact-form-status.is-error {
+  color: #ff9eae;
+}
+
+/* Botón de envío: JavaScript cambia su estado mientras FastAPI procesa el mensaje. */
+.submit-btn {
+  background-color: #e822fe;
+  color: #0d0312;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(232, 34, 254, 0.5);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(232, 34, 254, 0.8);
+  background-color: #f052ff;
+}
+
+.submit-btn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.send-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #0d0312;
+}
+
+/* Columna Derecha: Manuscrito */
+.thanks-note {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.handwritten-text {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 34px;
+  color: #e822fe;
+  margin: 0 0 8px 0;
+  transform: rotate(-4deg);
+  text-shadow: 0 0 12px rgba(232, 34, 254, 0.4);
+}
+
+.heart-container {
+  margin-bottom: 12px;
+}
+
+.heart-icon {
+  width: 32px;
+  height: 32px;
+  stroke: #e822fe;
+  filter: drop-shadow(0 0 8px #e822fe);
+}
+
+.decorative-line {
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e822fe, transparent);
+  border-radius: 2px;
+}
+
+/* Pie de página independiente de main, con marca, redes y aviso legal. */
+.site-footer {
+  border-top: 1px solid rgba(232, 34, 254, 0.2);
+  background-color: rgba(10, 2, 14, 0.95);
+  padding: 20px 24px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo {
+  width: 36px;
+  height: 36px;
+  background: rgba(232, 34, 254, 0.1);
+  border: 1px solid #e822fe;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo svg {
+  width: 20px;
+  height: 20px;
+  stroke: #e822fe;
+}
+
+.footer-title h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.footer-title p {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 2px 0 0 0;
+}
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-links a {
+  color: #9ca3af;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.social-links a svg {
+  width: 18px;
+  height: 18px;
+  stroke: #d1d5db;
+}
+
+.social-links a:hover svg {
+  stroke: #e822fe;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 8px #e822fe);
+}
+
+.copyright-text {
+  color: #6b7280;
+  font-size: 11px;
+  margin: 0;
+}
+
+/* En tablet, contacto y footer pasan a una columna para evitar columnas demasiado estrechas. */
+@media (max-width: 1024px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .thanks-note {
+    margin-top: 10px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-right {
+    align-items: center;
+  }
+}
+
+
+
+/* Los breakpoints del carrusel coinciden con getVisibleItemsCount() en script.js. */
+@media (max-width: 1024px) {
+  .skill-card {
+    flex: 0 0 calc(20% - 12px); /* 5 por vista */
+  }
+}
+
+@media (max-width: 600px) {
+  .skill-card {
+    flex: 0 0 calc(33.33% - 10px); /* 3 por vista */
+  }
+}
+
+
+
+/* Proyectos usan dos columnas en tablet y una en teléfono. */
+@media (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  .projects-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Reordena navegación y hero y reduce paddings para mantener todo dentro del viewport. */
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .submit-btn {
+    width: 100%;
+  }
+
+  html {
+    scroll-padding-top: 104px;
+  }
+
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-brand {
+    display: none;
+  }
+
+  .nav-links {
+    order: 2;
+    flex: 1 0 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .nav-item {
+    font-size: 11px;
+  }
+
+  .theme-toggle-wrapper {
+    margin-left: auto;
+  }
+
+  .hero-section {
+    min-height: 100svh;
+    padding: 120px 20px 72px;
+    background-image: linear-gradient(90deg, rgba(3, 8, 18, 0.98) 0%, rgba(3, 8, 18, 0.98) 62%, rgba(3, 8, 18, 0.38) 100%), url('img/caro.jpg');
+    background-position: 66% center;
+  }
+
+  .hero-text {
+    width: min(56vw, 220px);
+    max-width: 220px;
+  }
+
+  .hero-handwritten {
+    display: none;
+  }
+
+  .hero-section-nav {
+    right: 10px;
+    gap: 12px;
+  }
+
+  .hero-section-nav a {
+    width: 8px;
+    height: 8px;
+  }
+
+  .hero-section-nav a span {
+    right: 14px;
+    font-size: 10px;
+  }
+
+  .caro-chat-widget {
+    top: calc(50% + 68px);
+    right: 8px;
+  }
+
+  .caro-chat-trigger {
+    min-height: 52px;
+    height: 52px;
+    padding-right: 10px;
+  }
+
+  .caro-chat-panel {
+    width: min(320px, calc(100vw - 20px));
+    height: min(390px, calc(100dvh - 24px));
+  }
+
+  .author-name {
+    font-size: 2.2rem;
+  }
+
+  .author-role {
+    font-size: 1rem;
+  }
+
+  .author-bio {
+    font-size: 0.85rem;
+  }
+
+  .hero-cta-group {
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    justify-content: center;
+    padding: 11px 18px;
+  }
+
+  .about-section {
+    padding: 56px 20px;
+  }
+
+  .snake-section {
+    padding: 44px 16px 48px;
+  }
+
+  .snake-header .title {
+    font-size: 22px;
+  }
+
+  .snake-board {
+    grid-template-columns: repeat(20, minmax(0, 1fr));
+    gap: 3px;
+    padding: 8px;
+  }
+
+  .snake-cell {
+    font-size: 13px;
+  }
+
+  .snake-cell.is-head,
+  .snake-cell.is-food {
+    font-size: 12px;
+  }
+
+  .about-container {
+    gap: 24px;
+  }
+
+  .about-details {
+    flex-wrap: wrap;
+  }
+
+  .about-handwritten {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .projects-section {
+    padding: 56px 16px;
+  }
+
+  .contact-container {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
