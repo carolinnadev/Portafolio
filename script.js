@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
       const link = document.createElement('a');
-      link.href = 'hoja-de-vida.pdf';
+      link.href = 'data/CV_Carolina_Florez.pdf';
       link.download = 'CV_Carolina_Florez.pdf';
       document.body.appendChild(link);
       link.click();
