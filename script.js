@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ? sections[sections.length - 1]
         : isAboutHeadingActive
           ? aboutSection
-        : sections.reduce((active, section) => (
-          section.getBoundingClientRect().top <= marker ? section : active
-        ), sections[0]);
+          : sections.reduce((active, section) => (
+            section.getBoundingClientRect().top <= marker ? section : active
+          ), sections[0]);
 
       // Mantiene sincronizados el punto destacado y aria-current para navegación accesible.
       navLinks.forEach(link => {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateActiveSection();
   }
 
-  // Este chat es solo una interfaz local: no consulta servicios ni genera respuestas automáticas.
+  // Chat con el agente RAG conectado a FastAPI / n8n.
   const chatTrigger = document.getElementById('caroChatTrigger');
   const chatPanel = document.getElementById('caroChatPanel');
   const chatClose = document.getElementById('caroChatClose');
@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatMessages = document.getElementById('caroChatMessages');
 
   if (chatTrigger && chatPanel && chatClose && chatForm && chatInput && chatMessages) {
+    let currentSessionId = null;
+
     function setChatOpen(isOpen) {
       chatPanel.hidden = !isOpen;
       chatTrigger.setAttribute('aria-expanded', String(isOpen));
@@ -92,19 +94,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chatClose.addEventListener('click', () => setChatOpen(false));
 
-    chatForm.addEventListener('submit', event => {
+    chatForm.addEventListener('submit', async event => {
       event.preventDefault();
       const message = chatInput.value.trim();
       if (!message) return;
 
       // textContent evita interpretar el mensaje escrito como marcado HTML.
-      const messageElement = document.createElement('p');
-      messageElement.className = 'caro-chat-message caro-chat-message-user';
-      messageElement.textContent = message;
-      chatMessages.appendChild(messageElement);
+      const userMessageElement = document.createElement('p');
+      userMessageElement.className = 'caro-chat-message caro-chat-message-user';
+      userMessageElement.textContent = message;
+      chatMessages.appendChild(userMessageElement);
+
       chatInput.value = '';
       chatMessages.scrollTop = chatMessages.scrollHeight;
-      chatInput.focus();
+      chatInput.disabled = true;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            session_id: currentSessionId
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(result.detail || 'Error al comunicarse con el chat.');
+        }
+
+        currentSessionId = result.session_id || currentSessionId;
+
+        // Muestra la respuesta generada por el agente de n8n
+        const botMessageElement = document.createElement('p');
+        botMessageElement.className = 'caro-chat-message caro-chat-message-assistant';
+        botMessageElement.textContent = result.reply;
+        chatMessages.appendChild(botMessageElement);
+
+      } catch (error) {
+        // Mensaje de fallback en caso de error de conexión
+        const errorMessageElement = document.createElement('p');
+        errorMessageElement.className = 'caro-chat-message caro-chat-message-assistant';
+        errorMessageElement.textContent = 'No, esa información exacta no la tengo por acá, te la puedo responder por correo si me dejas tu mensaje. ¡Nos vemos!';
+        chatMessages.appendChild(errorMessageElement);
+      } finally {
+        chatInput.disabled = false;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatInput.focus();
+      }
     });
 
     document.addEventListener('keydown', event => {
@@ -447,8 +486,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
-
-
-

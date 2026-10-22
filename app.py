@@ -6,9 +6,11 @@ import logging
 import os
 import smtplib
 import ssl
+import uuid
 from email.message import EmailMessage
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -28,6 +30,15 @@ class ContactMessage(BaseModel):
     name: str = Field(min_length=2, max_length=120)
     email: EmailStr
     message: str = Field(min_length=10, max_length=5000)
+
+    model_config = {"str_strip_whitespace": True}
+
+
+class ChatMessage(BaseModel):
+    """Estructura de entrada para las preguntas del chatbot."""
+
+    message: str = Field(min_length=1, max_length=1000)
+    session_id: str | None = None
 
     model_config = {"str_strip_whitespace": True}
 
@@ -102,6 +113,43 @@ def receive_contact(contact: ContactMessage) -> dict[str, str]:
     """Valida el formulario y envía un acuse al correo indicado por el visitante."""
     _send_contact_email(contact)
     return {"message": "Gracias por contactarme. En breve me estaré comunicando con usted."}
+
+
+@app.post("/api/chat")
+async def chat_with_n8n(chat_input: ChatMessage) -> dict[str, str | None]:
+    """Recibe la pregunta del frontend y la reenvía al Webhook de n8n."""
+    n8n_webhook_url = os.getenv("N8N_WEBHOOK_URL", "").strip()
+
+    if not n8n_webhook_url:
+        raise HTTPException(
+            status_code=503,
+            detail="El webhook de n8n no está configurado.",
+        )
+
+    session_id = chat_input.session_id or str(uuid.uuid4())
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                n8n_webhook_url,
+                json={
+                    "message": chat_input.message,
+                    "session_id": session_id,
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+
+            reply = data.get("output") or data.get("reply") or data.get("message", "")
+
+            return {"reply": reply, "session_id": session_id}
+
+    except httpx.HTTPError:
+        logger.exception("Error al comunicarse con el Webhook de n8n.")
+        raise HTTPException(
+            status_code=502,
+            detail="No se pudo conectar con el servicio de chat en este momento.",
+        ) from None
 
 
 # Se sirven solo los archivos públicos necesarios; el directorio raíz y .env no se exponen.
