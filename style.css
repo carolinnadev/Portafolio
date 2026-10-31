@@ -285,7 +285,7 @@ body.theme-dim .toggle-circle {
 /* El botón de chat queda bajo los puntos; el panel se abre hacia arriba desde el avatar. */
 .caro-chat-widget {
   position: fixed;
-  top: calc(50% + 72px);
+  top: calc(73% + 72px);
   right: 12px;
   z-index: 1002;
 }
@@ -791,39 +791,6 @@ body.theme-dim .toggle-circle {
   margin-top: 8px;
   display: inline-block;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* Habilidades: ancho de contenido limitado y carrusel horizontal dentro de una banda oscura. */
